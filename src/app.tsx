@@ -1,31 +1,38 @@
 import './app.css'
-import { signal, useSignal, Signal } from "@preact/signals"
+import { ITask } from "./types"
+import { useSignal, Signal } from "@preact/signals"
 import TaskForm from "./components/TaskForm"
 import TaskList from "./components/TaskList"
 
-
-interface ITask {
-    title:string
-    description: string
-    dueDate: string// time stamp
-    done: boolean
-}
-
 interface IUseTodo {
     todos: Signal<ITask[]>
-    addTodo: Function
-    deleteTodo: Function
-    updateTodo: Function
-    markAsDone: Function
+    addTodo: (task:ITask) => boolean
+    deleteTodo: (taskId:string) => boolean
+    updateTodo: (taskId:string, task:ITask) => boolean
+    markAsDone: (taskId:string) => boolean
 }
 
 const useTodo = ():IUseTodo => {
     const todos = useSignal([])
 
-    const addTodo = () => {}
-    const deleteTodo = () => {}
-    const updateTodo = () => {}
-    const markAsDone = () => {}
+    const addTodo = (task:ITask):boolean => {
+        const newTask = {
+            ...task,
+            id: Date.now(),
+            markAsDone:false
+        }
+
+        return true
+    }
+    const deleteTodo = (taskId:string):boolean => {
+        return false
+    }
+    const updateTodo = (taskId:string, task:ITask):boolean => {
+        return false
+    }
+    const markAsDone = (taskId:string):boolean => {
+        return false
+    }
 
     return {
         todos: todos,
@@ -40,7 +47,9 @@ export function App() {
     const mainTodoState = useTodo()
 
     // ui controls
-    const showForm:Signal<boolean> = useSignal(true)
+    const showForm:Signal<boolean> = useSignal(false)
+
+    const toggleTaskForm = () => showForm.value = !showForm.value
 
     return (
         <>
@@ -52,12 +61,12 @@ export function App() {
                     </div>
                 ):(
                     <div>
-                        <button>add task</button>
+                        <button onClick={toggleTaskForm} >add task</button>
                     </div>
                 )
             }
             <div>
-                <TaskList tasks={mainTodoState.todos} />
+                <TaskList tasks={mainTodoState.todos.value} />
             </div>
         </>
     )

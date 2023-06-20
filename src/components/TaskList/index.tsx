@@ -1,8 +1,21 @@
+import { ITask } from "../../types"
 
-const TaskList = (props : {}) => {
+interface ITaskListProps {
+    tasks: ITask[]
+}
+
+const TaskList = (props : ITaskListProps) => {
     return (
         <div>
-            list
+            {
+                props.tasks.map((task:ITask) => {
+                    return (
+                        <div>
+                            { task.title }
+                        </div>
+                    )
+                })
+            }
         </div>
     )
 }
