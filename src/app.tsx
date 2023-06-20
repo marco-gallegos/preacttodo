@@ -16,11 +16,13 @@ const useTodo = ():IUseTodo => {
     const todos = useSignal([])
 
     const addTodo = (task:ITask):boolean => {
-        const newTask = {
+        const newTask:ITask = {
             ...task,
-            id: Date.now(),
-            markAsDone:false
+            id: `${Date.now()}`,
+            done:false
         }
+
+        todos.value = [ ...todos.value, newTask ]
 
         return true
     }
